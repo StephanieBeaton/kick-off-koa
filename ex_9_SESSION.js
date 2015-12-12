@@ -8,12 +8,12 @@
 // visit /:
 // =>
 // respond body: 1 views
-// set-cookie: koa:sess=…
+// set-cookie: koa:sess=
 
 // visit / again:
 // =>
 // respond body: 2 views
-// set-cookie: koa:sess=…
+// set-cookie: koa:sess=
 
 // HINT
 
@@ -57,28 +57,37 @@
 
     app.use(session(app));
 
-
-    function session() {
-      return function* (next) {
-        var n;
-
-        n = +this.session.get('view') || 0;
-        n = n + 1;
-
-        //this.cookies.set('view', n);
-
-        this.body = n + ' views';
-
-        this.session.set('view', n, [{'signed': true}]);
-
-        //this.cookies.options.signed = true;
-        // set a signed cookie
-        //this.cookies.set( "signed", "view", { signed: true } );
+    app.use(function *(next)
+    {
+      var n = this.session.views || 0;
+      this.session.views = ++n;
+      this.body = n + ' views';
+      yield next;
+    });
 
 
-        //this.cookies.set('view', n, [{signed: true}]);
-      };
-    }
+    // function session() {
+    //   return function* (next) {
+    //     console.log(this.session);
+    //     // var n;
+
+    //     // n = +this.session.get('view') || 0;
+    //     // n = n + 1;
+
+    //     // //this.cookies.set('view', n);
+
+    //     // this.body = n + ' views';
+
+    //     // this.session.set('view', n, [{'signed': true}]);
+
+    //     // //this.cookies.options.signed = true;
+    //     // // set a signed cookie
+    //     // //this.cookies.set( "signed", "view", { signed: true } );
+
+
+    //     //this.cookies.set('view', n, [{signed: true}]);
+    //   };
+    // }
 
 
     app.listen(process.argv[2]);

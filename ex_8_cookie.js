@@ -70,7 +70,7 @@
         // do nothing
         var n;
 
-        n = +this.cookies.get('view') || 0;
+        n = +this.cookies.get('view', {signed: true}) || 0;
         n = n + 1;
 
         //this.cookies.set('view', n);
@@ -83,8 +83,9 @@
         // set a signed cookie
         //this.cookies.set( "signed", "view", { signed: true } );
 
+        // console.log(this.cookies);
 
-        this.cookies.set('view', n, [{signed: true}]);
+        this.cookies.set('view', n, {signed: true});
 
     });
 
